@@ -31,22 +31,24 @@ const products = [
 const areas = ["Indiranagar", "Koramangala", "HSR Layout", "Jayanagar", "JP Nagar", "Whitefield", "Sarjapur", "Bellandur"];
 
 function Landing() {
+  const [cartOpen, setCartOpen] = useState(false);
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Nav />
+      <Nav onCart={() => setCartOpen(true)} />
       <Hero />
       <Marquee />
-      <Products />
+      <Products onAdd={() => setCartOpen(true)} />
       <Promise />
       <Areas />
       <Testimonials />
       <CTA />
       <Footer />
+      <CartSheet open={cartOpen} onClose={() => setCartOpen(false)} />
     </div>
   );
 }
 
-function Nav() {
+function Nav({ onCart }: { onCart: () => void }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
@@ -60,13 +62,12 @@ function Nav() {
           <a href="#areas" className="hover:text-foreground transition">Delivery Areas</a>
           <a href="#contact" className="hover:text-foreground transition">Contact</a>
         </nav>
-        <a href="#cta" className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90">
-          Start Subscription
-        </a>
+        <CartButton onOpen={onCart} />
       </div>
     </header>
   );
 }
+
 
 function Hero() {
   return (
