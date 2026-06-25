@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import heroImg from "@/assets/hero-dairy.jpg";
 import milkImg from "@/assets/product-milk.jpg";
 import gheeImg from "@/assets/product-ghee.jpg";
 import curdImg from "@/assets/product-curd.jpg";
 import paneerImg from "@/assets/product-paneer.jpg";
+import { CartButton, CartSheet } from "@/components/cart-sheet";
+import { cartStore } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -19,31 +22,33 @@ export const Route = createFileRoute("/")({
 });
 
 const products = [
-  { name: "A2 Cow Milk", price: "₹84", unit: "/ 500ml bottle", img: milkImg, tag: "Bestseller", desc: "From desi Gir cows, glass-bottled within 4 hours of milking." },
-  { name: "Bilona A2 Ghee", price: "₹1,499", unit: "/ 500ml jar", img: gheeImg, tag: "Hand-churned", desc: "Slow-cooked from cultured curd. Golden, grainy, deeply aromatic." },
-  { name: "Fresh Set Curd", price: "₹65", unit: "/ 400g tub", img: curdImg, tag: "Daily", desc: "Hung overnight in earthen pots for the perfect tang." },
-  { name: "Soft Paneer", price: "₹120", unit: "/ 250g block", img: paneerImg, tag: "Made today", desc: "Pressed fresh each morning. No starch, no fillers, no preservatives." },
+  { id: "milk-500", name: "A2 Cow Milk", price: 84, priceLabel: "₹84", unit: "/ 500ml bottle", img: milkImg, tag: "Bestseller", desc: "From desi Gir cows, glass-bottled within 4 hours of milking." },
+  { id: "ghee-500", name: "Bilona A2 Ghee", price: 1499, priceLabel: "₹1,499", unit: "/ 500ml jar", img: gheeImg, tag: "Hand-churned", desc: "Slow-cooked from cultured curd. Golden, grainy, deeply aromatic." },
+  { id: "curd-400", name: "Fresh Set Curd", price: 65, priceLabel: "₹65", unit: "/ 400g tub", img: curdImg, tag: "Daily", desc: "Hung overnight in earthen pots for the perfect tang." },
+  { id: "paneer-250", name: "Soft Paneer", price: 120, priceLabel: "₹120", unit: "/ 250g block", img: paneerImg, tag: "Made today", desc: "Pressed fresh each morning. No starch, no fillers, no preservatives." },
 ];
 
 const areas = ["Indiranagar", "Koramangala", "HSR Layout", "Jayanagar", "JP Nagar", "Whitefield", "Sarjapur", "Bellandur"];
 
 function Landing() {
+  const [cartOpen, setCartOpen] = useState(false);
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Nav />
+      <Nav onCart={() => setCartOpen(true)} />
       <Hero />
       <Marquee />
-      <Products />
+      <Products onAdd={() => setCartOpen(true)} />
       <Promise />
       <Areas />
       <Testimonials />
       <CTA />
       <Footer />
+      <CartSheet open={cartOpen} onClose={() => setCartOpen(false)} />
     </div>
   );
 }
 
-function Nav() {
+function Nav({ onCart }: { onCart: () => void }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
@@ -57,13 +62,12 @@ function Nav() {
           <a href="#areas" className="hover:text-foreground transition">Delivery Areas</a>
           <a href="#contact" className="hover:text-foreground transition">Contact</a>
         </nav>
-        <a href="#cta" className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90">
-          Start Subscription
-        </a>
+        <CartButton onOpen={onCart} />
       </div>
     </header>
   );
 }
+
 
 function Hero() {
   return (
@@ -136,7 +140,7 @@ function Marquee() {
   );
 }
 
-function Products() {
+function Products({ onAdd }: { onAdd: () => void }) {
   return (
     <section id="products" className="mx-auto max-w-7xl px-6 py-24">
       <div className="flex flex-wrap items-end justify-between gap-6">
@@ -151,7 +155,7 @@ function Products() {
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {products.map((p) => (
-          <article key={p.name} className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-card transition hover:-translate-y-1 hover:shadow-xl">
+          <article key={p.id} className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-card transition hover:-translate-y-1 hover:shadow-xl">
             <div className="relative aspect-square overflow-hidden bg-muted">
               <img src={p.img} alt={p.name} width={800} height={800} loading="lazy" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
               <span className="absolute left-4 top-4 rounded-full bg-background/90 px-3 py-1 text-xs font-medium text-primary backdrop-blur">
@@ -163,10 +167,16 @@ function Products() {
               <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
               <div className="mt-5 flex items-end justify-between">
                 <p>
-                  <span className="font-display text-2xl text-foreground">{p.price}</span>
+                  <span className="font-display text-2xl text-foreground">{p.priceLabel}</span>
                   <span className="ml-1 text-xs text-muted-foreground">{p.unit}</span>
                 </p>
-                <button className="rounded-full bg-primary px-4 py-2 text-xs font-medium text-primary-foreground transition hover:opacity-90">
+                <button
+                  onClick={() => {
+                    cartStore.add({ id: p.id, name: p.name, price: p.price, unit: p.unit });
+                    onAdd();
+                  }}
+                  className="rounded-full bg-primary px-4 py-2 text-xs font-medium text-primary-foreground transition hover:opacity-90"
+                >
                   Add
                 </button>
               </div>
@@ -177,6 +187,7 @@ function Products() {
     </section>
   );
 }
+
 
 function Promise() {
   const items = [
