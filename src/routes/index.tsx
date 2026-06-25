@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import heroImg from "@/assets/hero-dairy.jpg";
 import milkImg from "@/assets/product-milk.jpg";
 import gheeImg from "@/assets/product-ghee.jpg";
 import curdImg from "@/assets/product-curd.jpg";
 import paneerImg from "@/assets/product-paneer.jpg";
+import { CartButton, CartSheet } from "@/components/cart-sheet";
+import { cartStore } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
