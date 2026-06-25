@@ -22,10 +22,10 @@ export const Route = createFileRoute("/")({
 });
 
 const products = [
-  { name: "A2 Cow Milk", price: "₹84", unit: "/ 500ml bottle", img: milkImg, tag: "Bestseller", desc: "From desi Gir cows, glass-bottled within 4 hours of milking." },
-  { name: "Bilona A2 Ghee", price: "₹1,499", unit: "/ 500ml jar", img: gheeImg, tag: "Hand-churned", desc: "Slow-cooked from cultured curd. Golden, grainy, deeply aromatic." },
-  { name: "Fresh Set Curd", price: "₹65", unit: "/ 400g tub", img: curdImg, tag: "Daily", desc: "Hung overnight in earthen pots for the perfect tang." },
-  { name: "Soft Paneer", price: "₹120", unit: "/ 250g block", img: paneerImg, tag: "Made today", desc: "Pressed fresh each morning. No starch, no fillers, no preservatives." },
+  { id: "milk-500", name: "A2 Cow Milk", price: 84, priceLabel: "₹84", unit: "/ 500ml bottle", img: milkImg, tag: "Bestseller", desc: "From desi Gir cows, glass-bottled within 4 hours of milking." },
+  { id: "ghee-500", name: "Bilona A2 Ghee", price: 1499, priceLabel: "₹1,499", unit: "/ 500ml jar", img: gheeImg, tag: "Hand-churned", desc: "Slow-cooked from cultured curd. Golden, grainy, deeply aromatic." },
+  { id: "curd-400", name: "Fresh Set Curd", price: 65, priceLabel: "₹65", unit: "/ 400g tub", img: curdImg, tag: "Daily", desc: "Hung overnight in earthen pots for the perfect tang." },
+  { id: "paneer-250", name: "Soft Paneer", price: 120, priceLabel: "₹120", unit: "/ 250g block", img: paneerImg, tag: "Made today", desc: "Pressed fresh each morning. No starch, no fillers, no preservatives." },
 ];
 
 const areas = ["Indiranagar", "Koramangala", "HSR Layout", "Jayanagar", "JP Nagar", "Whitefield", "Sarjapur", "Bellandur"];
